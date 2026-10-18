@@ -25,9 +25,15 @@
   body {
     margin: 0;
     min-height: 100vh;
-    background: var(--bg);
+    background: #000;               /* only seen behind the page while it flies */
     color: var(--text);
     font-family: var(--serif);
+  }
+
+  /* the whole screen, so it can shrink into a card and fly away */
+  .app {
+    min-height: 100vh;
+    background: var(--bg);
   }
 
   main {
@@ -462,6 +468,18 @@ body.story {
 
 @keyframes glow-spin    { to { --glow-a: 360deg; } }
 @keyframes glow-breathe { 50% { opacity: 0.55; } }
+
+/* on the story screen the purple sky washes the colours out, so the edges
+   go dark behind the band (like the black of the small screen) and the
+   band itself is thicker */
+body.story .siri::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 10vmin 3vmin rgba(7, 6, 26, 0.85);
+}
+body.story .siri .sharp { --w: 6px; filter: blur(1px); }
+body.story .siri .soft  { --w: max(16px, 2.6vmin); filter: blur(max(6px, 0.8vmin)); }
 
 /* ============ STREAK OF LIGHT ============
    flies up or down the middle of the screen (moved by glow.js) */
