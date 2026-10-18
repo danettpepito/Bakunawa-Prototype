@@ -1,0 +1,86 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #0d0b24;
+  overflow: hidden;
+}
+
+/* ============ THE BIG SCREEN ============ */
+.stage {
+  position: fixed;
+  inset: 0;
+  container-type: size;      /* lets the subtitle size itself from the screen height */
+  background: #14122e;
+}
+.stage svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* an old copy of the drawing that fades out when the style changes */
+.stage svg.ghost { pointer-events: none; transition: opacity 1s ease; }
+
+/* ============ SUBTITLES ============ */
+.subtitle {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  z-index: 2;
+  width: min(80%, 1100px);
+  margin: 0;
+  transform: translateX(-50%);
+  text-align: center;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: max(16px, 5.2cqh);
+  line-height: 1.25;
+  color: #f3eadb;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);   /* just enough to read over the drawing */
+  text-wrap: balance;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.subtitle.out { opacity: 0; }
+
+/* ============ SOUND + FULL SCREEN BUTTONS ============ */
+.controls {
+  position: absolute;
+  top: 4%;
+  right: 1.6%;
+  z-index: 3;
+  display: flex;
+  gap: 6px;
+  transition: opacity 0.3s;
+}
+.controls.hide { opacity: 0; pointer-events: none; }
+.controls button {
+  padding: 6px 12px;
+  background: none;
+  border: 1px solid rgba(232, 211, 162, 0.5);
+  color: #e8d3a2;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* ============ WHEN AN ANSWER ARRIVES ============
+   a thin line around the edge that fades in, then out */
+.glow {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: inset 0 0 0 1px rgba(232, 211, 162, 0.7);
+  transition: opacity 0.4s ease;
+}
+.glow.on { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .subtitle, .controls, .stage svg.ghost, .glow { transition: none; }
+}

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bakunawa · Question screen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- five little diamonds at the top, one per scene -->
+  <div class="progress" id="progress" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <main>
+
+    <!-- ============ INTRO ============ -->
+    <section class="screen active" id="intro">
+      <p class="eyebrow">A story from the Visayas</p>
+      <h1 class="title">Bakunawa</h1>
+      <p class="lede">Long ago, people watched the night sky and told of a sea serpent who swallowed the moons. Tonight, your sky tells the story.</p>
+      <button class="btn btn-reading" id="begin">Begin the reading</button>
+    </section>
+
+    <!-- ============ SCENE 1: SEVEN MOONS ============ -->
+    <section class="screen" id="scene1">
+      <p class="eyebrow">Scene one · Seven moons</p>
+      <h2 class="question">Look at the moon tonight. What shape is it?</h2>
+
+      <div class="cards" data-key="moon">
+        <button class="card" data-answer="full">
+          <span class="gem"></span><span class="icon moon-full"></span><span class="label">Full &amp; bright</span>
+        </button>
+        <button class="card" data-answer="half">
+          <span class="gem"></span><span class="icon moon-half"></span><span class="label">Half lit</span>
+        </button>
+        <button class="card" data-answer="crescent">
+          <span class="gem"></span><span class="icon moon-crescent"></span><span class="label">A thin sliver</span>
+        </button>
+        <button class="card" data-answer="none">
+          <span class="gem"></span><span class="icon moon-none"></span><span class="label">Can't see it</span>
+        </button>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-story continue" disabled>
+          <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+          Continue your story
+        </button>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 2: THE SERPENT RISES ============ -->
+    <section class="screen" id="scene2">
+      <p class="eyebrow">Scene two · The serpent rises</p>
+      <h2 class="question">How bright is it outside right now?</h2>
+
+      <div class="slider-box">
+        <div class="sky-preview" id="skyPreview"></div>
+        <p class="readout" id="brightWord">Drag to match</p>
+        <input type="range" id="brightness" min="0" max="100" value="50" aria-label="How bright it is outside">
+        <div class="ends"><span>Pitch dark</span><span>Bright as day</span></div>
+      </div>
+
+      <div class="actions">
+        <button class="diamond back" aria-label="Back"><span>&larr;</span></button>
+        <button class="btn btn-story continue" disabled>
+          <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+          Continue your story
+        </button>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 3: THE DARK COMES ============ -->
+    <section class="screen" id="scene3">
+      <p class="eyebrow">Scene three · The dark comes</p>
+      <h2 class="question">Look around the moon. How many stars can you see?</h2>
+
+      <div class="counter">
+        <button class="diamond" id="minus" aria-label="One less star"><span>&minus;</span></button>
+        <p class="count" id="count" aria-live="polite">0</p>
+        <button class="diamond" id="plus" aria-label="One more star"><span>+</span></button>
+      </div>
+      <p class="star-row" id="starRow" aria-hidden="true"></p>
+      <button class="text-link" id="noStars">I can't see any</button>
+
+      <div class="actions">
+        <button class="diamond back" aria-label="Back"><span>&larr;</span></button>
+        <button class="btn btn-story continue" disabled>
+          <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+          Continue your story
+        </button>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 4: THE LAST MOON ============ -->
+    <section class="screen" id="scene4">
+      <p class="eyebrow">Scene four · The last moon</p>
+      <h2 class="question">Make noise to scare him off!</h2>
+      <p class="hint">Tap the pot, or clap and shout near the microphone.</p>
+
+      <button class="btn btn-reading pot" id="pot">Bang the pot</button>
+
+      <!-- these light up one by one as the village gets louder -->
+      <div class="meter" id="meter" aria-hidden="true"></div>
+      <p class="hint" id="noiseMsg">Keep going. The louder the village, the sooner he lets go.</p>
+
+      <button class="text-link" id="micBtn">Use the microphone</button>
+
+      <div class="actions">
+        <button class="btn btn-story continue" disabled>
+          <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+          Continue your story
+        </button>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 5: THE BAMBOO ============ -->
+    <section class="screen" id="scene5">
+      <p class="eyebrow">Scene five · The bamboo</p>
+      <h2 class="question">Look at the moon again. Can you see darker patches?</h2>
+
+      <div class="cards" data-key="patches">
+        <button class="card" data-answer="yes">
+          <span class="gem"></span><span class="icon moon-patches"></span><span class="label">Yes, I can</span>
+        </button>
+        <button class="card" data-answer="unsure">
+          <span class="gem"></span><span class="icon moon-unsure">?</span><span class="label">Not sure</span>
+        </button>
+        <button class="card" data-answer="cant">
+          <span class="gem"></span><span class="icon moon-none"></span><span class="label">Can't see</span>
+        </button>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-story continue" disabled>
+          <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+          Continue your story
+        </button>
+      </div>
+    </section>
+
+    <!-- ============ WATCH (between scenes) ============ -->
+    <section class="screen" id="watch">
+      <span class="pulse" aria-hidden="true"></span>
+      <p class="eyebrow" id="watchEyebrow">Look up</p>
+      <h2 class="question" id="watchTitle">Look up at the big screen.</h2>
+      <p class="lede" id="watchText"></p>
+      <button class="text-link next-link" id="watchNext">Continue <span>&rarr;</span></button>
+    </section>
+
+    <!-- ============ END ============ -->
+    <section class="screen" id="end">
+      <p class="eyebrow">The moon is home</p>
+      <h2 class="title small">He's still out there, circling.</h2>
+      <p class="lede">Look up tonight. The dark patches are Bathala's bamboo, keeping the last moon safe.</p>
+      <button class="btn btn-reading" id="again">Begin again</button>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

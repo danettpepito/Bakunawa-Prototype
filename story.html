@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bakunawa · Story screen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="story.css">
+</head>
+<body>
+
+  <div class="stage" id="stage">
+    <!-- the whole story is drawn into this svg by story.js -->
+    <svg id="scene" viewBox="0 -30 1028 700" preserveAspectRatio="xMidYMid slice" role="img" aria-label="The Bakunawa story: seven moons over a mountain and sea"></svg>
+
+    <p class="subtitle out" id="subtitle" aria-live="polite"></p>
+
+    <div class="controls" id="controls">
+      <button id="soundBtn">Turn on sound</button>
+      <button id="fullBtn">Full screen</button>
+    </div>
+  </div>
+
+  <script src="story.js"></script>
+</body>
+</html>
