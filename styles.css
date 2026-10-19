@@ -16,8 +16,8 @@
     --line: #8a7a5c;
     --line-strong: #e8d3a2;
     --text: #f1dfb4;
-    --display: "Barlow Condensed", "Arial Narrow", sans-serif;
-    --serif: "Cormorant Garamond", Georgia, serif;
+    --display: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --serif: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   }
 
   * { box-sizing: border-box; }

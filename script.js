@@ -106,7 +106,7 @@ function questionScreen() {
   let waitingFor = 0;      // the scene the big screen is drawing right now (0 = none)
   let moving = false;      // true while the page is flying up or dropping in
 
-  const page = document.getElementById("app");   // the whole screen
+  const page = document.querySelector("main");
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // talk to the story screen (works when both are open in the same browser)
@@ -230,14 +230,12 @@ function questionScreen() {
     if (reduceMotion) { onLeave(); onGone(); return; }
     moving = true;
     glowIn("bottom");
-    centreOnScreen();
 
-    // the whole screen shrinks into a card with rounded corners, then flies
     const fly = page.animate([
-      { transform: "none", borderRadius: "0px", opacity: 1, filter: "blur(0px)", easing: "ease-out" },
-      { transform: "scale(0.9)", borderRadius: "28px", opacity: 1, filter: "blur(0px)", offset: 0.25, easing: "cubic-bezier(0.55, 0, 0.85, 0.35)" },
-      { transform: "translateY(-115vh) scale(0.7)", borderRadius: "28px", opacity: 0.3, filter: "blur(6px)" }
-    ], { duration: 1000, fill: "forwards" });
+      { transform: "none", opacity: 1, filter: "blur(0px)", easing: "ease-out" },
+      { transform: "scale(0.95)", opacity: 1, filter: "blur(0px)", offset: 0.22, easing: "cubic-bezier(0.55, 0, 0.85, 0.35)" },
+      { transform: "translateY(-115vh) scale(0.72)", opacity: 0.3, filter: "blur(6px)" }
+    ], { duration: 950, fill: "forwards" });
 
     setTimeout(onLeave, 650);
 
@@ -252,12 +250,7 @@ function questionScreen() {
       ], { duration: 600, easing: "ease-out" });
       setTimeout(function () { glowOut("top"); }, 250);
       moving = false;
-    }, 1000);
-  }
-
-  // shrink towards the middle of what's on screen, even if the page is scrolled
-  function centreOnScreen() {
-    page.style.transformOrigin = "50% " + (window.scrollY + window.innerHeight / 2) + "px";
+    }, 950);
   }
 
   // the glow sweeps in from the top, the old page fades,
@@ -275,12 +268,11 @@ function questionScreen() {
     setTimeout(function () {
       showNext();
       fade.cancel();
-      centreOnScreen();
       page.animate([
-        { transform: "translateY(-115vh) scale(0.7)", borderRadius: "28px", opacity: 0.3, filter: "blur(6px)", easing: "cubic-bezier(0.2, 0.6, 0.35, 1)" },
-        { transform: "translateY(12px) scale(0.92)", borderRadius: "28px", opacity: 1, filter: "blur(0px)", offset: 0.6, easing: "ease-in-out" },
-        { transform: "none", borderRadius: "0px", opacity: 1, filter: "blur(0px)" }
-      ], { duration: 1100 });
+        { transform: "translateY(-115vh) scale(0.72)", opacity: 0.3, filter: "blur(6px)", easing: "cubic-bezier(0.2, 0.6, 0.35, 1)" },
+        { transform: "translateY(12px) scale(1.01)", opacity: 1, filter: "blur(0px)", offset: 0.72, easing: "ease-in-out" },
+        { transform: "none", opacity: 1, filter: "blur(0px)" }
+      ], { duration: 1000 });
       setTimeout(function () {
         glowOut("bottom");
         moving = false;
@@ -1072,11 +1064,9 @@ function storyScreen() {
       };
     }
 
-    let arriveGlowTimer = null;
-
     function receiveAnswer(scene, newAnswers) {
-      // the answer shoots up from the bottom and the edge lights up,
-      // then fades once the picture has started changing
+      // the answer shoots up from the bottom and the edge lights up.
+      // The glow stays on while the picture changes (see loop).
       arrive();
       setTimeout(function () {
         const before = JSON.stringify([answers.moon, answers.brightness, answers.stars]);
@@ -1102,53 +1092,44 @@ function storyScreen() {
     // an answer lands: glow sweeps up from the bottom edge, a streak flies up
     function arrive() {
       glowIn("bottom");
-      clearTimeout(arriveGlowTimer);
-      arriveGlowTimer = setTimeout(function () { glowOut("bottom"); }, 2000);
       shootLight("up");
       nudge("50% 100%");
       chime(true);
     }
 
     // done drawing: the same airdrop move as the small screen, but downwards.
-    // The rainbow sweeps in, the picture shrinks into a card and shoots off
-    // the bottom towards the small screen
+    // The picture dips, shoots off the bottom towards the small screen
     // (that's when we tell it to show the next question), then settles back.
     function sendBack(scene) {
       const ready = function () {
         if (channel) channel.postMessage({ type: "ready", scene: scene });
         console.log("sent:", { type: "ready", scene: scene });
       };
-      clearTimeout(arriveGlowTimer);
       chime(false);
-      // the rainbow sweeps in from the top edge, the same as on the small screen
-      glowIn("top");
-      if (reduceMotion) { setTimeout(function () { glowOut("bottom"); ready(); }, 600); return; }
+      shootLight("down");
+      if (reduceMotion) { glowOut("bottom"); ready(); return; }
 
-      // let the rainbow show for a moment before the picture goes
+      svg.style.transformOrigin = "50% 50%";
+      const fly = svg.animate([
+        { transform: "none", opacity: 1, filter: "blur(0px)", easing: "ease-out" },
+        { transform: "scale(0.95)", opacity: 1, filter: "blur(0px)", offset: 0.22, easing: "cubic-bezier(0.55, 0, 0.85, 0.35)" },
+        { transform: "translateY(115%) scale(0.72)", opacity: 0.3, filter: "blur(6px)" }
+      ], { duration: 950, fill: "forwards" });
+      // the subtitle fades out while the picture is away
+      subtitleEl.animate([{ opacity: 0, offset: 0.2 }, { opacity: 0, offset: 0.8 }], { duration: 1600 });
+
+      setTimeout(ready, 650);
+      setTimeout(function () { glowOut("bottom"); }, 700);
+
+      // timers rather than onfinish, so a hidden tab can't get stuck halfway
       setTimeout(function () {
-        shootLight("down");
-        svg.style.transformOrigin = "50% 50%";
-        const fly = svg.animate([
-          { transform: "none", borderRadius: "0px", opacity: 1, filter: "blur(0px)", easing: "ease-out" },
-          { transform: "scale(0.9)", borderRadius: "28px", opacity: 1, filter: "blur(0px)", offset: 0.25, easing: "cubic-bezier(0.55, 0, 0.85, 0.35)" },
-          { transform: "translateY(115%) scale(0.7)", borderRadius: "28px", opacity: 0.3, filter: "blur(6px)" }
-        ], { duration: 1000, fill: "forwards" });
-        // the subtitle fades out while the picture is away
-        subtitleEl.animate([{ opacity: 0, offset: 0.2 }, { opacity: 0, offset: 0.8 }], { duration: 1700 });
-
-        setTimeout(ready, 650);
-        setTimeout(function () { glowOut("bottom"); }, 900);
-
-        // timers rather than onfinish, so a hidden tab can't get stuck halfway
-        setTimeout(function () {
-          fly.cancel();
-          // the picture comes back gently from just above
-          svg.animate([
-            { opacity: 0, transform: "translateY(-2%) scale(0.98)" },
-            { opacity: 1, transform: "none" }
-          ], { duration: 700, easing: "ease-out" });
-        }, 1000);
-      }, 500);
+        fly.cancel();
+        // the picture comes back gently from just above
+        svg.animate([
+          { opacity: 0, transform: "translateY(-2%) scale(0.98)" },
+          { opacity: 1, transform: "none" }
+        ], { duration: 700, easing: "ease-out" });
+      }, 950);
     }
 
     // the whole picture swells a touch and brightens, then settles
